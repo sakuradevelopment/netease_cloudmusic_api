@@ -1,10 +1,8 @@
 {
   "functions": {
-    "./index.php": {
-      "runtime": "vercel-php@0.3.1",
-      "excludeFiles": "{test/**}",
-      "memory": 256,
-      "maxDuration": 5
+    "api": {
+      "handler": "./index.php",
+      "runtime": "vercel-php@0.5.0"
     }
   }
 }
