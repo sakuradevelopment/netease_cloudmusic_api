@@ -42,15 +42,15 @@ class API{
         curl_setopt($curl,CURLOPT_COOKIE,$this->_COOKIE."__csrf=".$_COOKIE["__csrf"]."; MUSIC_U=".$_COOKIE["MUSIC_U"]);
         curl_setopt($curl,CURLOPT_USERAGENT,$this->_USERAGENT);
         if($cookie==true){
-        //curl_setopt($curl,CURLOPT_HEADER,1);
-        //$result=curl_exec($curl);
+        curl_setopt($curl,CURLOPT_HEADER,1);
+        $result=curl_exec($curl);
         preg_match_all('/\{(.*)\}/', $cookiestr, $json);
-        //if(json_decode($json[0][0],1)["code"]==200){
+        if(json_decode($json[0][0],1)["code"]==200){
             preg_match_all('/Set-Cookie: MUSIC_U=(.*?)\;/', $cookiestr, $musicu);
             preg_match_all('/Set-Cookie: __csrf=(.*?)\;/', $cookiestr, $csrf);
             setcookie("MUSIC_U",$musicu[1][0]);
             setcookie("__csrf",$csrf[1][0]);
-        //}
+        }
         $result = 200;
         }else{
         $result=curl_exec($curl);}
