@@ -27,7 +27,7 @@ class API{
     }
 
     // CURL
-    protected function curl($url,$data=null,$cookie=false){
+    protected function curl($url,$data=null,$cookie=false,$cookiestr=null){
         $curl=curl_init();
         curl_setopt($curl,CURLOPT_URL,$url);
         if($data){
@@ -42,16 +42,16 @@ class API{
         curl_setopt($curl,CURLOPT_COOKIE,$this->_COOKIE."__csrf=".$_COOKIE["__csrf"]."; MUSIC_U=".$_COOKIE["MUSIC_U"]);
         curl_setopt($curl,CURLOPT_USERAGENT,$this->_USERAGENT);
         if($cookie==true){
-        curl_setopt($curl,CURLOPT_HEADER,1);
-        $result=curl_exec($curl);
-        preg_match_all('/\{(.*)\}/', $result, $json);
-        if(json_decode($json[0][0],1)["code"]==200){
-            preg_match_all('/Set-Cookie: MUSIC_U=(.*?)\;/', $result, $musicu);
-            preg_match_all('/Set-Cookie: __csrf=(.*?)\;/', $result, $csrf);
+        //curl_setopt($curl,CURLOPT_HEADER,1);
+        //$result=curl_exec($curl);
+        preg_match_all('/\{(.*)\}/', $cookiestr, $json);
+        //if(json_decode($json[0][0],1)["code"]==200){
+            preg_match_all('/Set-Cookie: MUSIC_U=(.*?)\;/', $cookiestr, $musicu);
+            preg_match_all('/Set-Cookie: __csrf=(.*?)\;/', $cookiestr, $csrf);
             setcookie("MUSIC_U",$musicu[1][0]);
             setcookie("__csrf",$csrf[1][0]);
-        }
-        $result = $json[0][0];
+        //}
+        $result = 200;
         }else{
         $result=curl_exec($curl);}
         curl_close($curl);
@@ -65,7 +65,7 @@ class API{
         return $string;
     }
     // login by phone
-    public function login($cell,$pwd,$countrycode){
+    public function login($cell,$pwd,$countrycode,$cookie){
         $url="https://music.163.com/weapi/login/cellphone";
         $data=array(
         "phone"=>$cell,
@@ -73,7 +73,7 @@ class API{
         "countrycode"=>$countrycode,
         "password"=>$pwd,
         "rememberLogin"=>"true");
-        return $this->curl($url,$this->prepare($data),true);
+        return $this->curl($url,$this->prepare($data),true,$cookie);
     }
     // login by email
     public function loginByEmail($cell,$pwd){
